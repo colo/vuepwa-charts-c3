@@ -6,7 +6,7 @@
 
 <script>
 import VueC3 from 'vue-c3'
-//import VueResource from 'vue-resource'
+
 
 import Vue from 'vue'
 
@@ -16,50 +16,83 @@ export default {
   name: 'vue-c3-custom-element',
   
   props: {
-			chart: {
-				type: Object,
-				 default: () => ({})
-			},
+		columns: {
+			type: [String, Array],
+			 default: () => (['mem', 0])
+		},
 	},
   
 	components: {
 		VueC3,
-		//VueResource
 	},
 		
   data () {
 		return {
-			handler: new Vue(),
-			//chart: {}
-		}
-		
-	},
-	
-	mounted () {
-			// to init the graph call:
-      const options = {
-        data: {
-          columns: [
-            ['data', 90],
-          ],
-          type: 'gauge',
-        },
-        color: {
-						pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+			gauge: {
+				data: {
+					columns: [],
+					type: 'gauge',
+				},
+				gauge: {
+					expand: false
+				},
+				color: {
+						pattern: ['#a4ff00', '#ffdf00', '#ffb100', '#FF0000'], // the three color levels for the percentage values.
 						threshold: {
-		//            unit: 'value', // percentage is default
-		//            max: 200, // 100 is default
-								values: [30, 60, 90, 100]
+							values: [25, 50, 75, 100]
 						}
 				},
 				size: {
-						height: 120
+					height: 120
 				} 
-      }
+			},
+			handler: new Vue(),
+		}
+		
+	},
+	/**computed: {
+		chart: function(){
+			if(typeof(this.columns) == 'string')
+				this.chart = JSON.parse(this.columns)
+				
+			this.gauge.data.columns = this.columns;
+			return this.gauge;
+		},
+	},*/
+	watch: {
+    columns: function (val) {
+			if(typeof(this.columns) == 'string')
+				val = JSON.parse(val)
+				
+      this.gauge.data.columns[0] = val;
       
-      //console.log(this.chart.color);
+      /**this.handler.$emit('dispatch', (chart) => chart.unload({
+					ids: ['mem']
+			}))
+			
+			console.log('App columns', this.gauge.data.columns[0])
+			
+      this.handler.$emit('dispatch', (chart) => chart.load(this.gauge.data.columns[0]))
+      this.handler.$emit('dispatch', (chart) => chart.flush())**/
       
-      this.handler.$emit('init', this.chart)
+      this.handler.$emit('dispatch', (chart) => chart.load({
+					columns: this.gauge.data.columns,
+					unload: ['mem']
+				})
+			);
+			
+    },
+  },
+	mounted () {
+			
+      if(typeof(this.columns) == 'string')
+				this.columns = JSON.parse(this.columns)
+			
+			console.log(this.columns)
+			
+			this.gauge.data.columns.push(this.columns);
+      
+      this.handler.$emit('init', this.gauge)
     },
 }
 </script>
