@@ -1,15 +1,33 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from './App.vue'
 
-Vue.config.productionTip = false
 
-/* eslint-disable no-new */
+
 new Vue({
   el: '#app',
-  router,
-  template: '<App/>',
-  components: { App }
+  components: {
+		'vue-c3-custom-element': App
+	},
+	data: {
+		'chart': {
+			data: {
+				columns: [
+					['data', 90],
+				],
+				type: 'gauge',
+			},
+			color: {
+					pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+					threshold: {
+	//            unit: 'value', // percentage is default
+	//            max: 200, // 100 is default
+							values: [30, 60, 90, 100]
+					}
+			},
+			size: {
+					height: 120
+			} 
+		}
+	}
+  //render: h => h(App)
 })

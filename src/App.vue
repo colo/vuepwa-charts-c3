@@ -1,50 +1,66 @@
 <template>
-  <div id="app">
-    <main>
-      <router-view></router-view>
-    </main>
+	 <div>
+    <vue-c3 :handler="handler"></vue-c3>
   </div>
 </template>
 
 <script>
+import VueC3 from 'vue-c3'
+//import VueResource from 'vue-resource'
+
+import Vue from 'vue'
+
+//Vue.use(VueC3)
+
 export default {
-  name: 'app'
+  name: 'vue-c3-custom-element',
+  
+  props: {
+			chart: {
+				type: Object,
+				 default: () => ({})
+			},
+	},
+  
+	components: {
+		VueC3,
+		//VueResource
+	},
+		
+  data () {
+		return {
+			handler: new Vue(),
+			//chart: {}
+		}
+		
+	},
+	
+	mounted () {
+			// to init the graph call:
+      const options = {
+        data: {
+          columns: [
+            ['data', 90],
+          ],
+          type: 'gauge',
+        },
+        color: {
+						pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+						threshold: {
+		//            unit: 'value', // percentage is default
+		//            max: 200, // 100 is default
+								values: [30, 60, 90, 100]
+						}
+				},
+				size: {
+						height: 120
+				} 
+      }
+      
+      //console.log(this.chart.color);
+      
+      this.handler.$emit('init', this.chart)
+    },
 }
 </script>
 
-<style>
-body {
-  margin: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-main {
-  text-align: center;
-  margin-top: 40px;
-}
-
-header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
-}
-
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
-}
-</style>
