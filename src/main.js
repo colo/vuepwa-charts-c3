@@ -5,7 +5,8 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
 
-Vue.http.options.root = 'http://192.168.0.180:5984'
+//Vue.http.options.root = 'http://192.168.0.180:5984'
+Vue.http.options.root = 'http://127.0.0.1:5984'
 
 new Vue({
   el: '#app',
@@ -81,8 +82,10 @@ new Vue({
 			
 			this.$http.get('dashboard/_design/sort/_view/by_path', {
  				params: {
- 					startkey: ["os", this.host, "periodical",Date.now()],
- 					endkey: ["os", this.host, "periodical", Date.now() - 10000],
+ 					//startkey: ["os", this.host, "periodical",Date.now()],
+ 					//endkey: ["os", this.host, "periodical", Date.now() - 10000],
+ 					startkey: ["os", this.host, "periodical\ufff0"],
+ 					endkey: ["os", this.host, "periodical"],
  					limit: 1,
  					//reduce: true, //avoid geting duplicate host
  					//group: true,
@@ -92,7 +95,7 @@ new Vue({
  				}
  			}).then(response => {
  
- 				//console.log(response.body.rows);//docs
+ 				console.log(response.body.rows);//docs
  				console.log(response.body.rows[0].doc.data);//
  				
  				//for (var key in response.body.rows[0].doc.data) {
