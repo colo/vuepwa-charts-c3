@@ -61,7 +61,7 @@ export default {
 	},*/
 	watch: {
     columns: function (val) {
-			if(typeof(this.columns) == 'string')
+			if(typeof(val) == 'string')
 				val = JSON.parse(val)
 				
       this.gauge.data.columns[0] = val;
